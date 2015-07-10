@@ -89,15 +89,15 @@ public class Utility {
 		
 		
 		String dbName = "default";
-		String tblName = "testSerDe";
-		ArrayList<String> partitionVals = new ArrayList<String>(1);
-		partitionVals.add("Asia");
+		String tblName = "test_hive";
+		ArrayList<String> partitionVals = new ArrayList<String>();
+		//partitionVals.add("Asia");
 		//partitionVals.add("India");
 		String serdeClass = "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe";
 		 
 		String ctable = "create table if not exists test_hive(date string, value string) row format delimited fields terminated by ','"; 
 		
-		HiveEndPoint hiveEP = new HiveEndPoint("thrift://localhost:10000", dbName, tblName, partitionVals);
+		HiveEndPoint hiveEP = new HiveEndPoint("thrift://localhost:10000", dbName, tblName, null);
 			 //("thrift://localhost:10000", dbName, tblName, partitionVals); thrift://localhost:10000
 		 
 		 
