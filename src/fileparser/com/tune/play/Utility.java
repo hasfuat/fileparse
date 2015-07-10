@@ -98,6 +98,7 @@ public class Utility {
 		String ctable = "create table if not exists test_hive(date string, value string) row format delimited fields terminated by ','"; 
 		
 		HiveEndPoint hiveEP = new HiveEndPoint("thrift://localhost:10000", dbName, tblName, partitionVals);
+			 //("thrift://localhost:10000", dbName, tblName, partitionVals); thrift://localhost:10000
 		 
 		 
 		 
@@ -105,13 +106,41 @@ public class Utility {
 		StreamingConnection connection = hiveEP.newConnection(true);
 		//field name is column name for folders.
 		String nameOfcolumn[] = new String[2];
-		//nameOfcolumn[0]
-		DelimitedInputWriter writer =
-		                     new DelimitedInputWriter(nameOfcolumn,",", hiveEP);
-		TransactionBatch txnBatch = connection.fetchTransactionBatch(10, writer);
+		nameOfcolumn[0] = "col1";
+		nameOfcolumn[1] = "col2";
+		//DelimitedInputWriter writer =
+		                    // new DelimitedInputWriter(nameOfcolumn,",", hiveEP);
+		
+		DelimitedInputWriter writer = new    DelimitedInputWriter(nameOfcolumn, ",", hiveEP);
+		
+		TransactionBatch txnBatch = connection.fetchTransactionBatch(1000, writer);
 		
 		
-		int i = 0;
+		
+		
+	///// Batch 1 - First TXN
+		txnBatch.beginNextTransaction();
+		txnBatch.write("1,Hello streaming".getBytes());
+		txnBatch.write("2,Welcome to streaming".getBytes());
+		txnBatch.commit();
+		 
+		 
+		if(txnBatch.remainingTransactions() > 0) {
+		///// Batch 1 - Second TXN
+		txnBatch.beginNextTransaction();
+		txnBatch.write("3,Roshan Naik".getBytes());
+		txnBatch.write("4,Alan Gates".getBytes());
+		txnBatch.write("5,Owen O’Malley".getBytes());
+		txnBatch.commit();
+		 
+		 
+		txnBatch.close();
+		connection.close();
+		}
+		 
+		 
+		
+		/*int i = 0;
 		//while(txnBatch.remainingTransactions()>0){
 			
 			txnBatch.beginNextTransaction();
@@ -131,7 +160,76 @@ public class Utility {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		connection.close();*/
+		
+		/*txnBatch = connection.fetchTransactionBatch(10, writer);
+		 
+		 
+		///// Batch 2 - First TXN
+		txnBatch.beginNextTransaction();
+		txnBatch.write("6,David Schorow".getBytes());
+		txnBatch.write("7,Sushant Sowmyan".getBytes());
+		txnBatch.commit();
+		 
+		 
+		if(txnBatch.remainingTransactions() > 0) {
+		///// Batch 2 - Second TXN
+		txnBatch.beginNextTransaction();
+		txnBatch.write("8,Ashutosh Chauhan".getBytes());
+		txnBatch.write("9,Thejas Nair".getBytes());
+		txnBatch.commit();
+		 
+		 
+		txnBatch.close();
+		}
+		 
+		 
 		connection.close();
+		 
+		 */
+		//-------   Thread 2  -------//
+		 
+		/* 
+		StreamingConnection connection2 = hiveEP.newConnection(true);
+		DelimitedInputWriter writer2 =
+		                     new DelimitedInputWriter(nameOfcolumn,",", hiveEP);
+		TransactionBatch txnBatch2= connection.fetchTransactionBatch(1000, writer2);
+		 
+		 
+		///// Batch 1 - First TXN
+		txnBatch2.beginNextTransaction();
+		txnBatch2.write("21,Venkat Ranganathan".getBytes());
+		txnBatch2.write("22,Bowen Zhang".getBytes());
+		txnBatch2.commit();
+		 
+		 
+		///// Batch 1 - Second TXN
+		txnBatch2.beginNextTransaction();
+		txnBatch2.write("23,Venkatesh Seetaram".getBytes());
+		txnBatch2.write("24,Deepesh Khandelwal".getBytes());
+		txnBatch2.commit();
+		 
+		 
+		txnBatch2.close();
+		connection.close();
+		 
+		 
+		 
+		txnBatch = connection.fetchTransactionBatch(10, writer);
+		 
+		 
+		///// Batch 2 - First TXN
+		txnBatch.beginNextTransaction();
+		txnBatch.write("26,David Schorow".getBytes());
+		txnBatch.write("27,Sushant Sowmyan".getBytes());
+		txnBatch.commit();
+		 
+		 
+		txnBatch2.close();
+		connection2.close();
+		*/
+		
+		
 		
 	}
 
@@ -140,7 +238,7 @@ public class Utility {
 		Connection con = null;
 		Statement st = null;
 
-		try {
+		/*try {
 			Class.forName(driverName);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -170,7 +268,7 @@ public class Utility {
 		// load data inpath '/authoritative/output.csv' into table test_hive;
 		String query = "load data inpath '/authoritative/output.csv' into table test_hive";
 		int q = st.executeUpdate(query);
-		System.out.println("Boolean q :" + q);
+		System.out.println("Boolean q :" + q);*/
 		
 		
 		
