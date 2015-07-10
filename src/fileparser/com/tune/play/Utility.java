@@ -108,8 +108,7 @@ public class Utility {
 		String nameOfcolumn[] = new String[2];
 		nameOfcolumn[0] = "col1";
 		nameOfcolumn[1] = "col2";
-		//DelimitedInputWriter writer =
-		                    // new DelimitedInputWriter(nameOfcolumn,",", hiveEP);
+		
 		
 		DelimitedInputWriter writer = new    DelimitedInputWriter(nameOfcolumn, ",", hiveEP);
 		
